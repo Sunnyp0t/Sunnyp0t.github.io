@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skull King Online</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">☠</div>
+        <div>
+          <h1>Skull King</h1>
+          <span>Le grand jeu des corsaires</span>
+        </div>
+      </div>
+
+      <div class="connection-status">
+        <span id="connectionDot"></span>
+        <span id="connectionText">Connexion...</span>
+      </div>
+    </header>
+
+    <section id="homeScreen" class="screen">
+      <div class="hero-card">
+        <div class="hero-content">
+          <div class="eyebrow">Jeu de plis multijoueur</div>
+
+          <h2>
+            Que les meilleurs<br />
+            <span>corsaires gagnent.</span>
+          </h2>
+
+          <p>
+            Annoncez vos plis, déjouez vos adversaires et partez à la
+            conquête des mers.
+          </p>
+
+          <div class="hero-actions">
+            <button id="showCreateButton" class="button button-primary">
+              Créer une partie
+            </button>
+
+            <button id="showJoinButton" class="button button-secondary">
+              Rejoindre une partie
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-decoration">
+          <div class="compass">✦</div>
+          <div class="hero-skull">☠</div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <article class="info-card">
+          <div class="info-icon">♛</div>
+          <h3>2 à 6 joueurs</h3>
+          <p>Affrontez vos amis en temps réel.</p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">⚓</div>
+          <h3>10 manches</h3>
+          <p>Chaque décision peut changer le destin.</p>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">✹</div>
+          <h3>Règles modulaires</h3>
+          <p>Activez les éléments de l’extension.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="lobbyScreen" class="screen hidden">
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow">Pont principal</div>
+          <h2>Préparez votre équipage</h2>
+        </div>
+
+        <button id="leaveRoomButton" class="button button-ghost">
+          Quitter
+        </button>
+      </div>
+
+      <div class="lobby-grid">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="panel-kicker">Code du salon</span>
+              <strong id="roomCodeDisplay">-----</strong>
+            </div>
+
+            <button id="copyRoomCodeButton" class="icon-button">
+              Copier
+            </button>
+          </div>
+
+          <div class="room-instructions">
+            Partagez ce code à vos amis pour qu’ils rejoignent la partie.
+          </div>
+
+          <div id="playersList" class="players-list"></div>
+        </div>
+
+        <div class="panel settings-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="panel-kicker">Configuration</span>
+              <h3>Options de navigation</h3>
+            </div>
+          </div>
+
+          <div id="settingsSummary" class="settings-summary"></div>
+
+          <button id="startGameButton" class="button button-primary full">
+            Lancer la partie
+          </button>
+
+          <p id="hostHint" class="muted">
+            En attente du capitaine...
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="game-header">
+        <div>
+          <div class="eyebrow">Journal de bord</div>
+          <h2>La partie est lancée</h2>
+        </div>
+
+        <div class="game-meta">
+          <div>
+            <span>Manche</span>
+            <strong id="roundDisplay">1 / 10</strong>
+          </div>
+
+          <div>
+            <span>Salon</span>
+            <strong id="gameRoomCode"></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <aside class="sidebar">
+          <div class="panel">
+            <div class="panel-heading">
+              <h3>Équipage</h3>
+            </div>
+
+            <div id="gamePlayersList" class="game-players-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-heading">
+              <h3>Journal</h3>
+            </div>
+
+            <div id="gameLog" class="game-log"></div>
+          </div>
+        </aside>
+
+        <div class="game-main">
+          <div id="phaseBanner" class="phase-banner"></div>
+
+          <div id="biddingPanel" class="panel hidden">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">Avant le combat</span>
+                <h3>Combien de plis remporterez-vous ?</h3>
+              </div>
+            </div>
+
+            <div class="bid-controls">
+              <select id="bidSelect"></select>
+              <button id="submitBidButton" class="button button-primary">
+                Annoncer ma mise
+              </button>
+            </div>
+          </div>
+
+          <div id="trickPanel" class="panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">Pli actuel</span>
+                <h3 id="trickTitle">En attente...</h3>
+              </div>
+
+              <div id="leadColorDisplay" class="lead-color"></div>
+            </div>
+
+            <div id="trickCards" class="trick-cards empty-state">
+              Aucune carte jouée.
+            </div>
+          </div>
+
+          <div id="roundFinishedPanel" class="panel hidden">
+            <div class="round-result">
+              <div class="result-icon">⚓</div>
+              <div>
+                <span class="panel-kicker">Fin de manche</span>
+                <h3>Les scores sont calculés</h3>
+                <p>Préparez-vous pour la prochaine manche.</p>
+              </div>
+            </div>
+
+            <button id="nextRoundButton" class="button button-primary">
+              Manche suivante
+            </button>
+          </div>
+
+          <div id="finishedPanel" class="panel hidden">
+            <div class="round-result">
+              <div class="result-icon">♛</div>
+              <div>
+                <span class="panel-kicker">Fin de partie</span>
+                <h3>Le roi des mers est couronné</h3>
+                <p>Consultez le classement final de l’équipage.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel hand-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">Votre main</span>
+                <h3 id="handTitle">Cartes disponibles</h3>
+              </div>
+
+              <span id="turnIndicator" class="turn-indicator"></span>
+            </div>
+
+            <div id="playerHand" class="player-hand"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="createModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+
+      <div class="eyebrow">Nouvelle expédition</div>
+      <h2>Créer une partie</h2>
+
+      <label class="field">
+        <span>Votre nom</span>
+        <input id="createNameInput" maxlength="24" placeholder="Capitaine Barbe-Rousse" />
+      </label>
+
+      <div class="options-list">
+        <label class="toggle-row">
+          <span>
+            <strong>Extension</strong>
+            <small>Ajoute les cartes et effets avancés.</small>
+          </span>
+          <input id="extensionToggle" type="checkbox" checked />
+        </label>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Pouvoirs des pirates</strong>
+            <small>Active les pouvoirs spéciaux des pirates.</small>
+          </span>
+          <input id="piratePowersToggle" type="checkbox" checked />
+        </label>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Règles spéciales</strong>
+            <small>Active les cartes spéciales de l’extension.</small>
+          </span>
+          <input id="specialRulesToggle" type="checkbox" checked />
+        </label>
+
+        <div id="specialOptions" class="nested-options">
+          <label class="check-row">
+            <input id="whaleToggle" type="checkbox" checked />
+            <span>Baleine blanche</span>
+          </label>
+
+          <label class="check-row">
+            <input id="krakenToggle" type="checkbox" checked />
+            <span>Kraken</span>
+          </label>
+
+          <label class="check-row">
+            <input id="lootToggle" type="checkbox" checked />
+            <span>Butin</span>
+          </label>
+        </div>
+      </div>
+
+      <button id="createRoomButton" class="button button-primary full">
+        Créer le salon
+      </button>
+    </div>
+  </div>
+
+  <div id="joinModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+
+      <div class="eyebrow">Rejoindre l’équipage</div>
+      <h2>Entrer dans un salon</h2>
+
+      <label class="field">
+        <span>Votre nom</span>
+        <input id="joinNameInput" maxlength="24" placeholder="Capitaine Morgan" />
+      </label>
+
+      <label class="field">
+        <span>Code de la partie</span>
+        <input id="joinCodeInput" maxlength="5" placeholder="ABCDE" />
+      </label>
+
+      <button id="joinRoomButton" class="button button-primary full">
+        Rejoindre
+      </button>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
